@@ -47,6 +47,17 @@ The allow header is set as `after_action` callback, which allows your entire req
 values you'll be returning in the `&block` passed to `allow`. In other words: these blocks are lazy and
 executed in the context of your controller _instance_.
 
+### Configuration
+
+In an initializer you can set procs in order to change the default behaviour:
+
+```ruby
+ResourceAllowHeader.configure do |this|
+  this.implicit_resource_proc = proc { |controller| controller.resource }
+  this.can_proc = proc { |action, resource, controller| action == :whatever || controller.can?(action, resource) }
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can

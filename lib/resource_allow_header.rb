@@ -1,14 +1,20 @@
 require "resource_allow_header/version"
 require 'active_support/concern'
+require 'active_support/core_ext/module/attribute_accessors'
 
 module ResourceAllowHeader
   class Error < StandardError; end
 
   extend ActiveSupport::Concern
-
   protected
 
   HEADER_ALLOW = 'Allow'
+
+  mattr_accessor :implicit_resource_proc, :can_proc
+
+  def self.configure
+    yield self
+  end
 
   included do
     attr_accessor :allow_
@@ -18,9 +24,10 @@ module ResourceAllowHeader
       response.header[HEADER_ALLOW] = compute_allow_header.join(', ')
     end
 
-    def compute_allow_header(resource: @allow_resource || @resource)
+    def compute_allow_header(resource: implicit_resource)
       Hash(allow_).each_with_object([]) do |(method, allow), result|
-        next unless can?(allow[:action], allow[:resource]&.call || resource)
+        allowable_resource = allow[:resource]&.call || resource
+        next unless allow?(allow[:action], allowable_resource)
         result << method
       end
     end
@@ -47,5 +54,19 @@ module ResourceAllowHeader
     def map_http_method_to_ability_action(http_method)
       HTTP_ABILITY_METHOD_MAP[http_method]
     end
+  end
+
+  private
+
+  def implicit_resource
+    implicit_resource_proc&.call(self) || @allow_resource || @resource
+  end
+
+  def allow?(action, resource)
+    if can_proc.respond_to?(:call)
+      return can_proc(action, resource, self)
+    end
+
+    can?(allow[:action], allow[:resource]&.call || resource)
   end
 end
