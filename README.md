@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/resource_allow_header.svg)](https://badge.fury.io/rb/resource_allow_header)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-CanCan supported Allow Header for Rack responses
+Allow Header for Rack responses using CanCan(Can) or any other authorization framework
 
 ## Installation
 
@@ -21,12 +21,19 @@ And then execute:
 Or install it yourself as:
 
     $ gem install resource_allow_header
+    
+This relies on `before_action` and `after_action` to exist, which is normally the case for any controller using 
+`AbstractController` in their chain. `Metal` controllers might need to include `Metal::Callbacks`. 
 
 ## Usage
 
 In your controller use the `allow` class method to determine the value of the `Allow` header:
 ```ruby
 require 'resource_allow_header'
+
+class ApiController < ActionController::API
+  include ResourceAllowHeader
+end
 
 class BookController < ApiController
   allow('HEAD', only: %i[show]) { @book }
@@ -52,9 +59,9 @@ executed in the context of your controller _instance_.
 In an initializer you can set procs in order to change the default behaviour:
 
 ```ruby
-ResourceAllowHeader.configure do |this|
-  this.implicit_resource_proc = proc { |controller| controller.resource }
-  this.can_proc = proc { |action, resource, controller| action == :whatever || controller.can?(action, resource) }
+ResourceAllowHeader.configure do
+  self.implicit_resource_proc = proc { |controller| controller.resource }
+  self.can_proc = proc { |action, resource, controller| action == :whatever || controller.can?(action, resource) }
 end
 ```
 
