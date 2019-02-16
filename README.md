@@ -58,6 +58,10 @@ ResourceAllowHeader.configure do |this|
 end
 ```
 
+## Related
+
+- [`AuthorizedTransaction`](https://github.com/XPBytes/authorized_transaction): :closed_lock_with_key: Authorize an activerecord transaction (or any other transaction) with cancan(can) or any other authorization framework
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can
