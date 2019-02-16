@@ -54,6 +54,28 @@ The allow header is set as `after_action` callback, which allows your entire req
 values you'll be returning in the `&block` passed to `allow`. In other words: these blocks are lazy and
 executed in the context of your controller _instance_.
 
+### Sane defaults
+
+If your API is conforming to REST, you'll usually have the following:
+
+```ruby
+allow('HEAD') { @your_resource }
+allow('GET') { @your_resource }
+allow('POST', only: %i[create index]) { YourResource.new(authorized_context) }
+allow('PUT', only: %i[show update]) { @your_resource }
+allow('DESTROY', only: %i[show update]) { @your_resource }
+```
+
+This is the case because:
+- Your `index` path (collection) is the same as your `create` path
+- Your `show` path (resource) is the same as your `update` and `delete` path
+- You can call `HEAD` both on the collection (`index`) and resource (`show`)
+- You can call `GET` on both the collection (`index`) and resource (`show`)
+- You can call `POST` only on the collection (`index`) path
+- You can call `PUT` and `DESTROY` only on the resource (`show`) path
+
+If 
+
 ### Configuration
 
 In an initializer you can set procs in order to change the default behaviour:
@@ -67,7 +89,8 @@ end
 
 ## Related
 
-- [`AuthorizedTransaction`](https://github.com/XPBytes/authorized_transaction): :closed_lock_with_key: Authorize an activerecord transaction (or any other transaction) with cancan(can) or any other authorization framework
+- [`AuthorizedTransaction`](https://github.com/XPBytes/authorized_transaction): :closed_lock_with_key: Authorize an
+  activerecord transaction (or any other transaction) with cancan(can) or any other authorization framework
 
 ## Development
 

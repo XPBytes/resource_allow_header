@@ -13,8 +13,8 @@ module ResourceAllowHeader
 
   mattr_accessor :implicit_resource_proc, :can_proc
 
-  def self.configure
-    yield self
+  def self.configure(&block)
+    block_given? ? instance_exec(self, &block) : self
   end
 
   included do
@@ -67,13 +67,13 @@ module ResourceAllowHeader
       return instance_exec(action, resource, self, &can_proc)
     end
 
-    can?(allow[:action], allow[:resource]&.call || resource)
+    can?(action, resource)
   end
 
   private
 
   def implicit_resource
-    if implicit_resource.respond_to?(:call)
+    if implicit_resource_proc.respond_to?(:call)
       return instance_exec(self, &implicit_resource_proc)
     end
 
