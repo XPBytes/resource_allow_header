@@ -1,13 +1,13 @@
 
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "resource_allow_header/version"
+require 'resource_allow_header/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "resource_allow_header"
+  spec.name          = 'resource_allow_header'
   spec.version       = ResourceAllowHeader::VERSION
-  spec.authors       = ["Derk-Jan Karrenbeld"]
-  spec.email         = ["derk-jan@xpbytes.com"]
+  spec.authors       = ['Derk-Jan Karrenbeld']
+  spec.email         = ['derk-jan@xpbytes.com']
 
   spec.summary       = 'CanCan supported Allow Header for Rack responses'
   spec.homepage      = 'https://github.com/XPBytes/resource_allow_header'
@@ -18,12 +18,12 @@ Gem::Specification.new do |spec|
   if spec.respond_to?(:metadata)
     # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
-    spec.metadata["homepage_uri"] = spec.homepage
-    spec.metadata["source_code_uri"] = spec.homepage
-    spec.metadata["changelog_uri"] = spec.homepage + '/CHANGELOG.md'
+    spec.metadata['homepage_uri'] = spec.homepage
+    spec.metadata['source_code_uri'] = spec.homepage
+    spec.metadata['changelog_uri'] = spec.homepage + '/CHANGELOG.md'
   else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
+    raise 'RubyGems 2.0 or newer is required to protect against ' \
+      'public gem pushes.'
   end
 
   # Specify which files should be added to the gem when it is released.
@@ -31,14 +31,14 @@ Gem::Specification.new do |spec|
   spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
-  spec.bindir        = "exe"
+  spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport', '>= 4.0.0'
   spec.add_dependency 'activerecord', '>= 4.0.0'
 
-  spec.add_development_dependency 'bundler', "~> 2.0"
-  spec.add_development_dependency 'rake', "~> 13.0"
-  spec.add_development_dependency 'minitest', "~> 5.0"
+  spec.add_development_dependency 'bundler', '~> 2.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
+  spec.add_development_dependency 'minitest', '~> 5.0'
 end
